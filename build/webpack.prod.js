@@ -71,7 +71,7 @@ var config = {
 		alias: alias
 	},
 	plugins: [
-		new CleanWebpackPlugin(['dist'],{
+		new CleanWebpackPlugin(['dist','cache'],{
 			root: ROOT_CONFIG.ROOT_PATH+"\\assets",
 			verbose: true,
 			dry: false
