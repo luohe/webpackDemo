@@ -31,7 +31,13 @@ const PUBLIC_PATH = "";
 //页面JS模块关系
 const JS_MODULE = {
 		//框架模块
-	vendor:['react','jquery']
+	vendor:[
+		'react',
+		'react-dom',
+		'react-router',
+		'react-redux',
+		'react-router-redux',
+		'jquery']
 		//	预留优化——————————————————————————————————————————————————————
 };
 

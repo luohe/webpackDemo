@@ -6,11 +6,23 @@ var ForceCaseSensitivityPlugin = require('force-case-sensitivity-webpack-plugin'
 var CommonsChunkPlugin = require("webpack/lib/optimize/CommonsChunkPlugin");
 var ROOT_CONFIG = require('./root.config');
 
+var precss = require('precss');
+var autoprefixer = require('autoprefixer');
+var rucksackCss = require('rucksack-css');
+var px2rem = require('postcss-pxtorem');
+
+const px2remOpts = {
+	rootValue: 100,
+	propWhiteList: [],
+};
+
 var noParse = [
 	// 'react-dom',
 	// 'react-redux'
 ];
 var config = {
+	debug: true,
+	devtool: 'eval-source-map',
 	target: 'web',
 	cache: true,
 	entry: {
@@ -23,13 +35,8 @@ var config = {
 		libraryTarget: 'umd',
 		publicPath: '/'
 	},
-	resolve:{
-		alias:{
-			react:path.join(ROOT_CONFIG.NODE_MODULES_PATH,'./react/dist/react.min.js'),
-			jquery:path.join(ROOT_CONFIG.NODE_MODULES_PATH,'./jquery/dist/jquery.min.js'),
-			'react-dom':path.join(ROOT_CONFIG.NODE_MODULES_PATH,'./react-dom/dist/react-dom.min.js')
-		},
-		extensions: ['', '.js', '.json', '.coffee']
+	resolve: {
+		alias: []
 	},
 	externals:{},
 	module: {
@@ -53,24 +60,39 @@ var config = {
 				query: {
 					cacheDirectory: true
 				}
-			}, {
-				test: /\.css$/,
-				loader: ExtractTextPlugin.extract("style-loader", "css-loader")
-			}, {
+			},
+			{
+				test: /\.scss$/,
+				loaders: [
+					'style',
+					'css?modules&sourceMap&importLoaders=1&localIdentName=[local]___[hash:base64:5]',
+					'postcss?parser=postcss-scss'
+				]
+			},
+			// 组件样式，需要私有化，单独配置
+			
+			// {
+			// 	test: /\.scss$/,
+			// 	loader: 'style!css!postcss?parser=postcss-scss'
+			// },
+			// 公有样式，不需要私有化，单独配置
+			{
 				test: /\.less$/,
 				loader: ExtractTextPlugin.extract("style-loader", "css-loader?!less-loader")
-			}, {
-				test: /\.(png|jpg|gif)$/,
-				loader: 'url-loader?limit=8192'
-			}, {
-				test: /\.(ttf|eot|svg|woff(2)?)(\?[a-z0-9]+)?$/,
-				loader: 'file'
-			}, {
-				test: /\.json$/,
-				loader: 'json'
-			}],
-		/* 不通过webpack打包 */
-		noParse: []
+			},
+			{
+				test: /\.css$/,
+				loader: ExtractTextPlugin.extract("style-loader", "css-loader")
+			},
+			{
+				test: /\.(otf|eot|svg|ttf|woff|woff2).*$/,
+				loader: 'url?limit=10000'
+			},
+			{
+				test: /\.(gif|jpe?g|png|ico)$/,
+				loader: 'url?limit=10000'
+			}
+		]
 	},
 	plugins: [
 		new webpack.DefinePlugin({
@@ -85,8 +107,9 @@ var config = {
 			minChunks: Infinity
 		})
 	],
-	debug: true,
-	devtool: 'eval-source-map'
+	postcss:function () {
+		return [precss,autoprefixer,rucksackCss,px2rem(px2remOpts)]
+	}
 };
 
 module.exports = config;

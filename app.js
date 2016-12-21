@@ -92,7 +92,7 @@ app.render = function (name, options, callback) {
 			//注入JS
 			var JS_Tag1 = window.document.createElement('script');
 			var JS_Tag2 = window.document.createElement('script');
-			JS_Tag1.src = `lib.js`;
+			JS_Tag1.src = `vendor.js`;
 			JS_Tag2.src = `${name}.entry.js`;
 			htmlDOM.head.appendChild(styleTag);
 			htmlDOM.body.appendChild(JS_Tag1);

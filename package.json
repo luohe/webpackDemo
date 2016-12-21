@@ -17,6 +17,7 @@
   "author": "xiazhiqiang",
   "license": "MIT",
   "dependencies": {
+    "autoprefixer": "^6.5.4",
     "babel": "^6.5.2",
     "babel-core": "^6.18.2",
     "babel-loader": "^6.2.8",
@@ -44,7 +45,14 @@
     "lodash": "^4.17.2",
     "morgan": "^1.7.0",
     "path": "^0.12.7",
+    "postcss-pxtorem": "^3.3.1",
     "react": "^15.4.1",
+    "react-dom": "^15.4.1",
+    "react-redux": "^5.0.1",
+    "react-router": "^3.0.0",
+    "react-router-redux": "^4.0.7",
+    "redux": "^3.6.0",
+    "rucksack-css": "^0.9.1",
     "serve-favicon": "^2.3.2",
     "style-loader": "^0.13.1",
     "url-loader": "^0.5.7",
@@ -68,6 +76,7 @@
     "postcss": "^5.2.6",
     "postcss-loader": "^1.2.0",
     "precss": "^1.4.0",
+    "rucksack-css": "^0.9.1",
     "style-loader": "^0.13.1",
     "webpack-md5-hash": "0.0.5"
   }

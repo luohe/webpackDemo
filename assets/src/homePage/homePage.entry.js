@@ -1,10 +1,13 @@
 import "./css/homePage.less";
 import $ from 'jquery';
 import react from 'react';
+import {applyRouterMiddleware} from 'react-router';
 
 $(function (){
 	console.log($);
 	console.log(react);
+	console.log(applyRouterMiddleware);
+	
 	$('.signIn').click(function (){
 		$.ajax({
 			type:"POST",
