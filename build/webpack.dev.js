@@ -1,11 +1,11 @@
 'use strict';
 
 var webpack = require('webpack');
+var path = require('path');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var ForceCaseSensitivityPlugin = require('force-case-sensitivity-webpack-plugin');
 var CommonsChunkPlugin = require("webpack/lib/optimize/CommonsChunkPlugin");
 var ROOT_CONFIG = require('./root.config');
-
 var precss = require('precss');
 var autoprefixer = require('autoprefixer');
 var rucksackCss = require('rucksack-css');
@@ -63,6 +63,7 @@ var config = {
 			},
 			{
 				test: /\.scss$/,
+				include: path.resolve(__dirname, '../assets/src/manage/js'),
 				loaders: [
 					'style',
 					'css?modules&sourceMap&importLoaders=1&localIdentName=[local]___[hash:base64:5]',
@@ -70,11 +71,11 @@ var config = {
 				]
 			},
 			// 组件样式，需要私有化，单独配置
-			
-			// {
-			// 	test: /\.scss$/,
-			// 	loader: 'style!css!postcss?parser=postcss-scss'
-			// },
+			{
+				test: /\.scss$/,
+				include:path.resolve(__dirname, '../assets/src/manage/css'),
+				loader: 'style!css!postcss?parser=postcss-scss'
+			},
 			// 公有样式，不需要私有化，单独配置
 			{
 				test: /\.less$/,
@@ -102,7 +103,7 @@ var config = {
 		new ExtractTextPlugin("[name].css"),
 		new webpack.HotModuleReplacementPlugin(),
 		new webpack.NoErrorsPlugin(),
-		new webpack.optimize.CommonsChunkPlugin({
+		new CommonsChunkPlugin({
 			name: 'vendor',
 			minChunks: Infinity
 		})

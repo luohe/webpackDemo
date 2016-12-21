@@ -1,19 +1,18 @@
 import "./css/homePage.less";
 import $ from 'jquery';
 import react from 'react';
-import {applyRouterMiddleware} from 'react-router';
+import ReactDOM from 'react-dom';
 
 $(function (){
 	console.log($);
 	console.log(react);
-	console.log(applyRouterMiddleware);
-	
+	console.log(ReactDOM);
 	$('.signIn').click(function (){
 		$.ajax({
 			type:"POST",
 			url:"/live/app/login.do",
 			data:{'mobile':18325527323,"password":111111},
-			success:function (data) {
+			success:function (data){
 				console.log(data)
 			}
 		})

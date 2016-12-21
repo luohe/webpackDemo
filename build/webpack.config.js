@@ -9,7 +9,6 @@ var webpackConfig,compiler;
 module.exports = function (app, debug) {
 	if(debug){
 		webpackConfig = require('./webpack.dev');
-		
 		var entries = {};
 		var entriesFile = glob.sync(path.resolve(__dirname, '../assets/src/**/*.entry.js'));
 		for (var i = 0, len = entriesFile.length; i < len; i++) {

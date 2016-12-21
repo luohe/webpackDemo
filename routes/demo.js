@@ -9,5 +9,4 @@ router.get('/demo', function (req, res) {
 router.get('/homePage', function (req, res) {
   res.render('homePage');
 });
-
 module.exports = router;

@@ -32,13 +32,13 @@ const PUBLIC_PATH = "";
 const JS_MODULE = {
 		//框架模块
 	vendor:[
+		'jquery',
 		'react',
 		'react-dom',
 		'react-router',
 		'react-redux',
-		'react-router-redux',
-		'jquery']
-		//	预留优化——————————————————————————————————————————————————————
+		'react-router-redux']
+	//	预留优化——————————————————————————————————————————————————————
 };
 
 //开发环境JS模块配置组合
@@ -72,6 +72,9 @@ var HTML_JS_RELY=[];
 _.forEach(ENTRY_PATH,function (n, key) {
 	HTML_JS_RELY = HTML_JS_RELY.concat({filename:key,chunks:[key,'vendor']})
 });
+
+
+
 
 const ROOT_CONFIG ={
 	ROOT_PATH:ROOT_PATH,

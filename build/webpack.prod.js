@@ -1,5 +1,6 @@
 "use strict";
 var webpack = require('webpack');
+var path = require('path');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var WebpackMd5Hash = require('webpack-md5-hash');
 var CommonsChunkPlugin = require("webpack/lib/optimize/CommonsChunkPlugin");
@@ -7,12 +8,10 @@ var precss = require('precss');
 var autoprefixer = require('autoprefixer');
 var rucksackCss = require('rucksack-css');
 var px2rem = require('postcss-pxtorem');
-
 const px2remOpts = {
 	rootValue: 100,
 	propWhiteList: [],
 };
-
 var _    = require('lodash');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var CleanWebpackPlugin = require('clean-webpack-plugin');
@@ -45,8 +44,6 @@ alias = Object.assign(alias, pickFiles({
 	id: /(reducers\/[^\/]+).js/,
 	pattern: ROOT_CONFIG.SRC_PATH + '/redux/reducers/*'
 }));
-
-
 
 // actions
 // import actions from 'actions/index';
@@ -92,19 +89,19 @@ var config = {
 			},
 			{
 				test: /\.scss$/,
+				include: path.resolve(__dirname, '../assets/src/manage/js'),
 				loaders: [
 					'style',
-					'css?modules&importLoaders=1&localIdentName=[local]___[hash:base64:5]',
+					'css?modules&sourceMap&importLoaders=1&localIdentName=[local]___[hash:base64:5]',
 					'postcss?parser=postcss-scss'
 				]
 			},
 			// 组件样式，需要私有化，单独配置
-			/*
-			 {
-			 test: /\.scss$/,
-			 loader: 'style!css!postcss?parser=postcss-scss'
-			 },
-			 */
+			{
+				test: /\.scss$/,
+				include:path.resolve(__dirname, '../assets/src/manage/css'),
+				loader: 'style!css!postcss?parser=postcss-scss'
+			},
 			// 公有样式，不需要私有化，单独配置
 			{
 				publicPath:"./css/images",
@@ -173,6 +170,8 @@ for (var i=0;i<ROOT_CONFIG.HTML_JS_RELY.length;i++){
 			filename:ROOT_CONFIG.HTML_JS_RELY[i].filename+'.html',
 			chunks:ROOT_CONFIG.HTML_JS_RELY[i].chunks,
 			template: ROOT_CONFIG.SRC_PATH + '/'+ROOT_CONFIG.HTML_JS_RELY[i].filename+'/'+ROOT_CONFIG.HTML_JS_RELY[i].filename+'.html',
+			hash:true,
+			inject:'body',
 			minify: {
 				collapseWhitespace: true,
 				collapseInlineTagWhitespace: true,
@@ -185,30 +184,6 @@ for (var i=0;i<ROOT_CONFIG.HTML_JS_RELY.length;i++){
 		});
 	config.plugins.push(H)
 }
-
-
-// // 内嵌 manifest 到 html 页面
-// config.plugins.push(function() {
-// 	this.plugin('compilation', function(compilation) {
-// 		compilation.plugin('html-webpack-plugin-after-emit', function(file, callback) {
-// 			var manifest = '';
-// 			Object.keys(compilation.assets).forEach(function(filename) {
-// 				if (/\/?manifest.[^\/]*js$/.test(filename)) {
-// 					manifest = '<script>' + compilation.assets[filename].source() + '</script>';
-// 				}
-// 			});
-// 			if (manifest) {
-// 				var htmlSource = file.html.source();
-// 				htmlSource = htmlSource.replace(/(<\/head>)/, manifest + '$1');
-// 				file.html.source = function() {
-// 					return htmlSource;
-// 				};
-// 			}
-// 			callback(null, file);
-// 		});
-// 	});
-// });
-
 module.exports = config;
 
 

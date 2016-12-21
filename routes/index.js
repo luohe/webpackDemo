@@ -4,7 +4,7 @@ var demoRouter = require('./demo');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-	res.render('home');
+	res.render('manage');
 });
 
 
