@@ -2,7 +2,7 @@
  * Created by Administrator on 2016/12/12.
  */
 "use strict";
-
+var path = require('path');
 // 辅助函数
 const utils = require('./utils');
 // lodash
@@ -14,6 +14,7 @@ const pickFiles = utils.pickFiles;
 // 项目根路径
 const ROOT_PATH = fullPath('../');
 const CACHE_PATH = ROOT_PATH + '/assets/cache';
+
 // 项目源码路径
 const SRC_PATH = ROOT_PATH + '/assets/src';
 // 产出路径
@@ -90,7 +91,6 @@ const ROOT_CONFIG ={
 	CHUNK_MODULE:CHUNK_MODULE,
 	HTML_JS_RELY:HTML_JS_RELY
 };
-
 
 
 

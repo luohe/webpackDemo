@@ -16,7 +16,7 @@
   ],
   "author": "xiazhiqiang",
   "license": "MIT",
-  "dependencies":{
+  "dependencies": {
     "antd-mobile": "^0.9.9",
     "babel-polyfill": "^6.13.0",
     "isomorphic-fetch": "^2.2.1",

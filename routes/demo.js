@@ -9,4 +9,8 @@ router.get('/demo', function (req, res) {
 router.get('/homePage', function (req, res) {
   res.render('homePage');
 });
+
+// router.get('/manage', function (req, res) {
+//   res.render('manage');
+// });
 module.exports = router;
