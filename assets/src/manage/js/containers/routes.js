@@ -9,7 +9,7 @@ import {
   Tour,
   User,
   NotFoundPage,
-} from './containers'
+} from './index'
 
 export default (
   <Route path="/" component={App}>

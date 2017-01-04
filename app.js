@@ -87,8 +87,6 @@ app.render = function (name, options, callback) {
 			styleTag.setAttribute('rel', 'stylesheet');
 			styleTag.href = `${name}.entry.css`;
 			
-			
-			
 			//注入JS
 			var JS_Tag1 = window.document.createElement('script');
 			var JS_Tag2 = window.document.createElement('script');

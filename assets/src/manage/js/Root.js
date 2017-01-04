@@ -1,12 +1,12 @@
 import React from 'react'
 import { Provider } from 'react-redux'
-import routes from '../routes'
+import routes from './containers/routes'
 import { Router } from 'react-router'
-import '../../css/normalize.scss'
-import '../../css/app.scss'
-import '../../css/antdStyleReset.scss'
-import '../../css/font.scss'
-import '../../css/animations.scss'
+import '../css/normalize.scss'
+import '../css/app.scss'
+import '../css/antdStyleReset.scss'
+import '../css/font.scss'
+import '../css/animations.scss'
 import 'moment/locale/zh-cn'
 
 

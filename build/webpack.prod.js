@@ -89,7 +89,7 @@ var config = {
 			},
 			{
 				test: /\.scss$/,
-				include: path.resolve(__dirname, '../assets/src/manage/js'),
+				include:[path.resolve(__dirname, '../assets/src/manage/js'),path.resolve(__dirname, '../assets/src/statistics/js')],
 				loaders: [
 					'style',
 					'css?modules&sourceMap&importLoaders=1&localIdentName=[local]___[hash:base64:5]',
@@ -99,7 +99,7 @@ var config = {
 			// 组件样式，需要私有化，单独配置
 			{
 				test: /\.scss$/,
-				include:path.resolve(__dirname, '../assets/src/manage/css'),
+				include:[path.resolve(__dirname, '../assets/src/manage/css'),path.resolve(__dirname, '../assets/src/statistics/css')],
 				loader: 'style!css!postcss?parser=postcss-scss'
 			},
 			// 公有样式，不需要私有化，单独配置

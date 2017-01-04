@@ -19,36 +19,26 @@ import {
 } from 'redux-saga/effects'
 
 import moment from 'moment'
-
-import fetch from 'isomorphic-fetch'
+import handleRequest from './servers'
 import {
   REQUEST_POSTS,
   RECEIVE_POSTS
 } from '../actions/actionsTypes'
 
-// 异步获取数据，开始！
-function fetchPostsApi(url) {
-  return fetch(`https://api.github.com/users`)
-    .then(response => response.json() )
-    .then(json => json.map(item => item.url))
-    .then(url => url.map(item => fetch(item).then(response => response.json())))
-    .then(pro => Promise.all(pro))
-}
-
-/*function* fetchPosts() {
- const posts = yield call(fetchPostsApi)
- yield put({type: RECEIVE_POSTS, posts})
- }*/
-
-/*为什么会出错误？？*/
-/*function* fetchPosts() {
- const posts = yield call(fetchPostsApi)
- yield put(actions.onReceivePosts(posts))
- }*/
+const list = ()=>{
+  var  defered = handleRequest("https://api.github.com/users",{a:1});
+  var  posts  =  defered.then(json => json.map(item => item.url))
+    .then(url => url.map(item => handleRequest(item)))
+    .then(pro => {
+      return Promise.all(pro)
+    })
+    .catch(err=> console.log(err));
+  return posts;
+};
 
 function* fetchPosts() {
   yield call(delay, 3000);
-  const posts = yield call(fetchPostsApi);
+  const posts = yield list();
   yield put({type: RECEIVE_POSTS, posts, receivedAt: moment().format("HH:mm:ss")})
 }
 
