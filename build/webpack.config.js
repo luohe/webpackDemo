@@ -17,6 +17,7 @@ module.exports = function (app, debug) {
 			entries[key] = [hotMiddlewareScript, path.resolve(__dirname,filePath)];
 		}
 		_.merge(webpackConfig.entry, entries);
+		console.log(webpackConfig.entry);
 		compiler = webpack(webpackConfig);
 		app.use(webpackMiddleware(compiler, {
 			contentBase: webpackConfig.output.path,

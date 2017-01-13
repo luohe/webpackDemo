@@ -9,6 +9,9 @@ $(function (){
 		$.ajax({
 			type:"POST",
 			url:"/live/app/login.do",
+			headers:{
+				'test':'test01'
+			},
 			data:{'mobile':18325527323,"password":111111},
 			success:function (data) {
 				console.log(data)

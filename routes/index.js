@@ -9,7 +9,7 @@ router.get('*', function(req, res, next) {
 });
 
 // // 配置子路由
-// router.use(demoRouter);
+router.use(demoRouter);
 
 // router.use(statistics);
 
