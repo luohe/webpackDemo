@@ -7,7 +7,7 @@ import {
 const init = {
   asyncBool: false,
   asyncCountDown: 3
-};
+}
 
 export default function counterAsync(state = init, action) {
   switch (action.type) {
@@ -15,18 +15,18 @@ export default function counterAsync(state = init, action) {
       return {
         ...state,
         asyncBool: true,
-      };
+      }
     case COUNT_DOWN:
       return {
         ...state,
         asyncCountDown: state.asyncCountDown -1
-      };
+      }
     case ASYNC_OVER:
       return {
         ...state,
         asyncBool: false,
         asyncCountDown: 3
-      };
+      }
     default:
       return state;
   }

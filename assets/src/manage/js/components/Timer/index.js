@@ -3,7 +3,7 @@ import moment from 'moment'
 import styles from './index.scss'
 
 const Timer = props => {
-  console.log();
+  console.log()
   return (
     <div className="plr20 ptb30">
       <p className="font-40">
