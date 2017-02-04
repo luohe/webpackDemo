@@ -5,7 +5,7 @@ var statistics = require('./statistics');
 
 /* GET home page. */
 router.get('*', function(req, res, next) {
-	res.render('manage');
+	res.render('tixian');
 });
 
 // // 配置子路由

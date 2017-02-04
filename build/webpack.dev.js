@@ -16,17 +16,31 @@ const px2remOpts = {
 	propWhiteList: [],
 };
 
-var noParse = [
-	// 'react-dom',
-	// 'react-redux'
-];
+//公共模块路径映射:降低 require 路径查找的时间
+var alias;
+alias = Object.assign({}, {
+	'react-router': ROOT_CONFIG.NODE_MODULES_PATH + '/react-router/lib/index.js',
+	'react-redux': ROOT_CONFIG.NODE_MODULES_PATH + '/react-redux/lib/index.js',
+	'redux': ROOT_CONFIG.NODE_MODULES_PATH + '/redux/lib/index.js',
+	'redux-thunk': ROOT_CONFIG.NODE_MODULES_PATH + '/redux-thunk/lib/index.js',
+	"babel-polyfill":ROOT_CONFIG.NODE_MODULES_PATH + '/babel-polyfill/lib/index.js',
+	"react-router-redux":ROOT_CONFIG.NODE_MODULES_PATH + '/react-router-redux/lib/index.js',
+	"redbox-react":ROOT_CONFIG.NODE_MODULES_PATH + '/redbox-react/lib/index.js'
+});
+var noParse=[];
+for (var k in alias){
+	if (alias.hasOwnProperty(k)){
+		noParse.push(alias[k])
+	}
+}
+
 var config = {
 	debug: true,
 	devtool: 'eval-source-map',
 	target: 'web',
 	cache: true,
 	entry: {
-		lib: ROOT_CONFIG.DEV_JS_MODULE
+		// vendor: ROOT_CONFIG.DEV_JS_MODULE
 	},
 	output: {
 		filename: '[name].js',
@@ -36,10 +50,11 @@ var config = {
 		publicPath: '/'
 	},
 	resolve: {
-		alias: []
+		alias: alias
 	},
 	externals:{},
 	module: {
+		noParse:noParse,
 		loaders: [
 			{
 				test: /[\.jsx|\.js]$/,
@@ -56,22 +71,6 @@ var config = {
 					cacheDirectory: true
 				}
 			},
-			{
-				test: /\.scss$/,
-				include:[path.resolve(__dirname, '../assets/src/manage/js'),path.resolve(__dirname, '../assets/src/statistics/js')],
-				loaders: [
-					'style',
-					'css?modules&sourceMap&importLoaders=1&localIdentName=[local]___[hash:base64:5]',
-					'postcss?parser=postcss-scss'
-				]
-			},
-			// 组件样式，需要私有化，单独配置
-			{
-				test: /\.scss$/,
-				include:[path.resolve(__dirname, '../assets/src/manage/css'),path.resolve(__dirname, '../assets/src/statistics/css')],
-				loader: 'style!css!postcss?parser=postcss-scss'
-			},
-			// 公有样式，不需要私有化，单独配置
 			{
 				test: /\.less$/,
 				loader: ExtractTextPlugin.extract("style-loader", "css-loader?!less-loader")
@@ -98,9 +97,13 @@ var config = {
 		new ExtractTextPlugin("[name].css"),
 		new webpack.HotModuleReplacementPlugin(),
 		new webpack.NoErrorsPlugin(),
-		new CommonsChunkPlugin({
-			name: 'vendor',
-			minChunks: Infinity
+		// new CommonsChunkPlugin({
+		// 	name: 'vendor',
+		// 	minChunks: Infinity
+		// })
+		new webpack.DllReferencePlugin({
+			context: '.',
+			manifest: require('./dll/vendor-manifest.json')
 		})
 	],
 	postcss:function () {

@@ -13,6 +13,7 @@ const jsdom = require('jsdom');
 const routes = require('./routes/index');
 const config = require('./config/proxy.config');
 const webpackMiddleWare = require('./build/webpack.config');
+const bundle = require('./build/dll/bundle-config.json');
 const app = express();
 
 // 初始化 state
@@ -43,15 +44,13 @@ app.set('debug', app.get('env') === 'development');
 //调用webpack配置文件
 	webpackMiddleWare(app, app.get('debug'));
 
-
-
 // 模板引擎设置
 if (app.get('debug')){
 	app.set('views', path.join(__dirname, 'assets/src'));
 } else {
 	app.set('views', path.join(__dirname, 'assets/dist'));
 }
-app.set('view engine', 'html');
+app.set('view engine','html');
 app.engine('html', require('ejs').renderFile);
 
 //body cookie parser middleware
@@ -62,9 +61,9 @@ app.use(logger('dev'));
 
 if (!app.get('debug')) {
 	app.use(express.static(path.join(__dirname, 'assets/dist')));
+}else{
+	app.use(express.static(path.join(__dirname, 'assets/src')));
 }
-
-
 app.use(compression());
 
 app.use('/', routes);
@@ -78,10 +77,8 @@ app.render = function (name, options, callback) {
 		const serializeDocument = jsdom.serializeDocument;
 		const window = jsDOMFormatter().defaultView;
 		const filename = path.join(app.get('views'), name, name + '.' + app.get('view engine'));
-		console.log('filename:', filename);
 		const injectStyle = (err, html) => {
 			var htmlDOM = jsDOMFormatter(html);
-			
 			// 注入style
 			var styleTag = window.document.createElement('link');
 			styleTag.setAttribute('rel', 'stylesheet');
@@ -90,12 +87,11 @@ app.render = function (name, options, callback) {
 			//注入JS
 			var JS_Tag1 = window.document.createElement('script');
 			var JS_Tag2 = window.document.createElement('script');
-			JS_Tag1.src = `vendor.js`;
+			JS_Tag1.src = bundle.vendor.js;
 			JS_Tag2.src = `${name}.entry.js`;
 			htmlDOM.head.appendChild(styleTag);
 			htmlDOM.body.appendChild(JS_Tag1);
 			htmlDOM.body.appendChild(JS_Tag2);
-			
 			callback.call(this,err, serializeDocument(htmlDOM));
 		};
 		if (fs.existsSync(filename)) {
@@ -109,7 +105,6 @@ app.render = function (name, options, callback) {
 		app._render(name, options, callback);
 	}
 };
-
 
 // 404错误处理
 app.use((req, res, next) => {
@@ -130,7 +125,6 @@ app.use((err, req, res, next) => {
 	res.status(err.status || 500);
 	res.send(err.toString());
 });
-
 
 module.exports = app;
 

@@ -1,5 +1,6 @@
 var glob = require('glob');
 var path = require('path');
+
 //根路径
 exports.fullPath = function(dir) {
   return path.resolve(__dirname, dir);

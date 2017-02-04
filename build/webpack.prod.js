@@ -87,21 +87,6 @@ var config = {
 					cacheDirectory: true
 				}
 			},
-			{
-				test: /\.scss$/,
-				include:[path.resolve(__dirname, '../assets/src/manage/js'),path.resolve(__dirname, '../assets/src/statistics/js')],
-				loaders: [
-					'style',
-					'css?modules&sourceMap&importLoaders=1&localIdentName=[local]___[hash:base64:5]',
-					'postcss?parser=postcss-scss'
-				]
-			},
-			// 组件样式，需要私有化，单独配置
-			{
-				test: /\.scss$/,
-				include:[path.resolve(__dirname, '../assets/src/manage/css'),path.resolve(__dirname, '../assets/src/statistics/css')],
-				loader: 'style!css!postcss?parser=postcss-scss'
-			},
 			// 公有样式，不需要私有化，单独配置
 			{
 				publicPath:"./css/images",
@@ -138,9 +123,12 @@ var config = {
 		new webpack.DefinePlugin({
 			"process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV || 'development')
 		}),
-		new CommonsChunkPlugin({
-			name: "vendor",
-			minChunks: Infinity
+		// new CommonsChunkPlugin({
+		// 	name: "vendor"
+		// }),
+		new webpack.DllReferencePlugin({
+			context: '.',
+			manifest: require('./dll/vendor-manifest.json')
 		}),
 		// 使用文件名替换数字作为模块ID
 		new webpack.NamedModulesPlugin(),
