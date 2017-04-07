@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "babel-node ./bin/www --harmony",
     "prodTest": "cross-env NODE_ENV=production babel-node --harmony ./bin/www",
-    "production": "cross-env NODE_ENV=production babel-node --harmony build/webpack.prod.js"
+    "production": "cross-env NODE_ENV=production babel-node --harmony build/webpack.prod.js",
+    "dll":"webpack --config ./build/webpack.dll.config.js"
   },
   "keywords": [
     "webpack",
