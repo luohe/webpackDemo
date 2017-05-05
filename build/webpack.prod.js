@@ -60,6 +60,11 @@ alias = Object.assign(alias, {
 	'redux-thunk': ROOT_CONFIG.NODE_MODULES_PATH + '/redux-thunk/lib/index.js'
 });
 
+const svgDirs = [
+  require.resolve('antd-mobile').replace(/warn\.js$/, ''),  // 1. 属于 antd-mobile 内置 svg 文件
+  // path.resolve(__dirname, 'src/my-project-svg-foler'),  // 2. 自己私人的 svg 存放目录
+];
+
 var config = {
 	context: ROOT_CONFIG.SRC_PATH,
 	entry: ROOT_CONFIG.PRODUCTION_JS_MODULE,
@@ -75,36 +80,61 @@ var config = {
 			{
 				test: /[\.jsx|\.js]$/,
 				exclude: /node_modules/,
-				loader: 'babel',
+				loader: 'babel-loader',
 				presets: [
 					'react',
 					'es2015'
 				],
 				plugins:[
+					["import", { "style": "css", "libraryName": "antd-mobile" }],
 					'transform-object-assign'
 				],
 				query: {
 					cacheDirectory: true
 				}
 			},
-			// 公有样式，不需要私有化，单独配置
+      {
+        test: /\.less$/,
+        loader: ExtractTextPlugin.extract("style-loader", "css-loader?!less-loader")
+      },
+      {
+        test: /\.scss$/,
+        loader: ExtractTextPlugin.extract({
+          use: [{
+            loader: "css-loader"
+          }, {
+            loader: "sass-loader"
+          }],
+          fallback: "style-loader"
+        })
+      },
+      {
+        test: /\.css$/,
+        loader: ExtractTextPlugin.extract("style-loader", "css-loader")
+      },
+			// // 公有样式，不需要私有化，单独配置
+			// {
+			// 	publicPath:"./css/images",
+			// 	test: /\.less$/,
+			// 	loader: ExtractTextPlugin.extract('style', 'css!postcss!less')
+			// },
+			// {
+			// 	test: /\.css$/,
+			// 	loader: 'style!css!postcss'
+			// },
 			{
-				publicPath:"./css/images",
-				test: /\.less$/,
-				loader: ExtractTextPlugin.extract('style', 'css!postcss!less')
-			},
-			{
-				test: /\.css$/,
-				loader: 'style!css!postcss'
-			},
-			{
-				test: /\.(otf|eot|svg|ttf|woff|woff2).*$/,
+				test: /\.(otf|eot|ttf|woff|woff2).*$/,
 				loader: 'url?limit=10000'
 			},
 			{
 				test: /\.(gif|jpe?g|png|ico)$/,
 				loader: 'url?limit=10000'
-			}
+			},
+      {
+        test: /\.(svg)$/i,
+        loader: 'svg-sprite',
+        include: svgDirs,  // 把 svgDirs 路径下的所有 svg 文件交给 svg-sprite-loader 插件处理
+      }
 		]
 	},
 	resolve: {
@@ -115,7 +145,7 @@ var config = {
 		new webpack.optimize.OccurrenceOrderPlugin(),
 		// // 具体是的优化是：webpack就能够比对id的使用频率和分布来得出最短的id分配给使用频率高的模块
 		new CleanWebpackPlugin(['dist'],{
-			root: ROOT_CONFIG.ROOT_PATH+"\\assets",
+			root: ROOT_CONFIG.ROOT_PATH + "\\assets",
 			verbose: true,
 			dry: false
 			// exclude: ['shared.js']
@@ -123,13 +153,13 @@ var config = {
 		new webpack.DefinePlugin({
 			"process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV || 'development')
 		}),
-		// new CommonsChunkPlugin({
-		// 	name: "vendor"
-		// }),
-		new webpack.DllReferencePlugin({
-			context: '.',
-			manifest: require('./dll/vendor-manifest.json')
+		new CommonsChunkPlugin({
+			name: "vendor"
 		}),
+		// new webpack.DllReferencePlugin({
+		// 	context: '.',
+		// 	manifest: require('./dll/vendor-manifest.json')
+		// }),
 		// 使用文件名替换数字作为模块ID
 		new webpack.NamedModulesPlugin(),
 		// 根据文件内容生成 hash
@@ -145,19 +175,19 @@ var config = {
 		})
 	],
 	postcss:function () {
-		return [precss,autoprefixer,rucksackCss,px2rem(px2remOpts)]
+		return [precss,autoprefixer,rucksackCss,px2rem(px2remOpts)];
 	}
 };
 
 // 将entry合并到webpack中
 _.merge(config.entry, ROOT_CONFIG.PRODUCTION_ENTRY_PATH);
 
-for (var i=0;i<ROOT_CONFIG.HTML_JS_RELY.length;i++){
+for (var i = 0;i < ROOT_CONFIG.HTML_JS_RELY.length;i++){
 	var H =
 		new HtmlWebpackPlugin({
-			filename:ROOT_CONFIG.HTML_JS_RELY[i].filename+'.html',
+			filename:ROOT_CONFIG.HTML_JS_RELY[i].filename + '.html',
 			chunks:ROOT_CONFIG.HTML_JS_RELY[i].chunks,
-			template: ROOT_CONFIG.SRC_PATH + '/'+ROOT_CONFIG.HTML_JS_RELY[i].filename+'/'+ROOT_CONFIG.HTML_JS_RELY[i].filename+'.html',
+			template: ROOT_CONFIG.SRC_PATH + '/' + ROOT_CONFIG.HTML_JS_RELY[i].filename + '/' + ROOT_CONFIG.HTML_JS_RELY[i].filename + '.html',
 			hash:true,
 			inject:'body',
 			minify: {
@@ -170,7 +200,7 @@ for (var i=0;i<ROOT_CONFIG.HTML_JS_RELY.length;i++){
 				removeComments: true
 			}
 		});
-	config.plugins.push(H)
+	config.plugins.push(H);
 }
 module.exports = config;
 

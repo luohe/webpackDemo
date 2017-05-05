@@ -27,12 +27,18 @@ alias = Object.assign({}, {
 	"react-router-redux":ROOT_CONFIG.NODE_MODULES_PATH + '/react-router-redux/lib/index.js',
 	"redbox-react":ROOT_CONFIG.NODE_MODULES_PATH + '/redbox-react/lib/index.js'
 });
-var noParse=[];
+var noParse = [];
 for (var k in alias){
 	if (alias.hasOwnProperty(k)){
-		noParse.push(alias[k])
+		noParse.push(alias[k]);
 	}
 }
+
+const svgDirs = [
+  require.resolve('antd-mobile').replace(/warn\.js$/, ''),  // 1. 属于 antd-mobile 内置 svg 文件
+  // path.resolve(__dirname, 'src/my-project-svg-foler'),  // 2. 自己私人的 svg 存放目录
+];
+
 
 var config = {
 	debug: true,
@@ -75,18 +81,44 @@ var config = {
 				test: /\.less$/,
 				loader: ExtractTextPlugin.extract("style-loader", "css-loader?!less-loader")
 			},
+      {
+        test: /\.scss$/,
+        loader: ExtractTextPlugin.extract({
+            use: [{
+              loader: "css-loader"
+            }, {
+              loader: "sass-loader"
+            }],
+            fallback: "style-loader"
+          })
+      },
 			{
 				test: /\.css$/,
 				loader: ExtractTextPlugin.extract("style-loader", "css-loader")
 			},
+      // 公有样式，不需要私有化，单独配置
+      // {
+      //   publicPath:"./css/images",
+      //   test: /\.less$/,
+      //   loader: ExtractTextPlugin.extract('style', 'css!postcss!less')
+      // },
+      // {
+      //   test: /\.css$/,
+      //   loader: 'style!css!postcss'
+      // },
 			{
-				test: /\.(otf|eot|svg|ttf|woff|woff2).*$/,
+				test: /\.(otf|eot|ttf|woff|woff2).*$/,
 				loader: 'url?limit=10000'
 			},
 			{
 				test: /\.(gif|jpe?g|png|ico)$/,
 				loader: 'url?limit=10000'
-			}
+			},
+      {
+        test: /\.(svg)$/i,
+        loader: 'svg-sprite',
+        include: svgDirs,  // 把 svgDirs 路径下的所有 svg 文件交给 svg-sprite-loader 插件处理
+      },
 		]
 	},
 	plugins: [
@@ -107,7 +139,7 @@ var config = {
 		})
 	],
 	postcss:function () {
-		return [precss,autoprefixer,rucksackCss,px2rem(px2remOpts)]
+		return [precss,autoprefixer,rucksackCss,px2rem(px2remOpts)];
 	}
 };
 

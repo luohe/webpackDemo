@@ -41,7 +41,8 @@ const JS_MODULE = {
 		'redux-saga',
 		'react-router-redux',
 		'redbox-react',
-		'react-hot-loader'
+		'react-hot-loader',
+		'antd-mobile'
 	]
 	//	预留优化——————————————————————————————————————————————————————
 };
